@@ -1,0 +1,189 @@
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Loader, Wallet, ArrowDownToLine, DollarSign } from "lucide-react"
+import { useContractInteraction } from "@/Contract/useContractInteraction"
+import { useAppKitAccount } from "@reown/appkit/react"
+import { parseUnits } from "viem"
+import { PAYMENT_CONTRACT_ADDRESS } from "@/appConfig"
+import FortezzaPaymentContractAbi from "@/Contract/abi/FortezzaPaymentContract.json"
+import store from "@/utils/store"
+import useToast from "@/components/Toast"
+
+export default function WithdrawBalance({ userBotData, onSuccess }) {
+    const { address, isConnected } = useAppKitAccount()
+    const { stableCoinDecimals } = store(s => s.temp)
+    const { toast } = useToast()
+
+    const [withdrawAmount, setWithdrawAmount] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [showWithdrawForm, setShowWithdrawForm] = useState(false)
+
+    // Withdraw bot stable coin
+    const { execute: withdrawBotStableCoin, isApproving: isWithdrawing, error: withdrawError, receipt: withdrawReceipt } = useContractInteraction({
+        contractAddress: PAYMENT_CONTRACT_ADDRESS,
+        contractAbi: FortezzaPaymentContractAbi,
+        functionName: 'withdrawBotStableCoin',
+        functionArgs: [withdrawAmount ? parseUnits(withdrawAmount, stableCoinDecimals || 18) : 0n],
+        disabled: !isConnected || !withdrawAmount,
+    })
+
+    const handleWithdraw = async () => {
+        if (!isConnected) {
+            toast({
+                title: 'Wallet not connected',
+                description: 'Please connect your wallet first',
+                variant: 'error',
+            })
+            return
+        }
+
+        if (!userBotData.subscribed) {
+            toast({
+                title: 'Subscription required',
+                description: 'You need an active subscription to withdraw',
+                variant: 'error',
+            })
+            return
+        }
+
+        const amount = parseFloat(withdrawAmount)
+        if (!amount || amount <= 0) {
+            toast({
+                title: 'Invalid amount',
+                description: 'Please enter a valid amount',
+                variant: 'error',
+            })
+            return
+        }
+
+        if (amount > userBotData.balance) {
+            toast({
+                title: 'Insufficient balance',
+                description: `You can only withdraw up to ${userBotData.balance} USDT`,
+                variant: 'error',
+            })
+            return
+        }
+
+        setLoading(true)
+
+        try {
+            await withdrawBotStableCoin()
+        } catch (err) {
+            console.error('Withdraw error:', err)
+            setLoading(false)
+        }
+    }
+
+    // Handle withdraw success
+    useEffect(() => {
+        console.log('Withdraw receipt check:', { withdrawReceipt, loading })
+        if (withdrawReceipt && withdrawReceipt.status === 'success' && loading) {
+            console.log('Withdrawal successful, calling onSuccess')
+            toast({
+                title: 'Withdrawal successful!',
+                description: `Withdrew ${withdrawAmount} USDT from bot balance`,
+                variant: 'success',
+            })
+            setWithdrawAmount("")
+            setShowWithdrawForm(false)
+            setLoading(false)
+            onSuccess?.()
+        }
+    }, [withdrawReceipt, loading])
+
+    // Handle errors
+    useEffect(() => {
+        if (withdrawError) {
+            const errorMessage = withdrawError.toString()
+            if (errorMessage.toLowerCase().includes("user rejected")) {
+                toast({
+                    title: 'Transaction rejected',
+                    description: 'You rejected the transaction in your wallet',
+                    variant: 'error',
+                })
+                setLoading(false)
+            } else {
+                // toast({
+                //     title: 'Withdrawal failed',
+                //     description: errorMessage,
+                //     variant: 'error',
+                // })
+                console.log(errorMessage);
+            }
+        }
+    }, [withdrawError])
+
+    return (
+        <div className="bg-slate-800/30 p-4 rounded-lg">
+
+            <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-emerald-500/20 rounded-lg">
+                    <ArrowDownToLine className="h-5 w-5 text-emerald-400" />
+                </div>
+                <div>
+                    <h3 className="text-white font-semibold">Withdraw Funds</h3>
+                    <p className="text-slate-400 text-sm">Available: {userBotData.balance} USDT</p>
+                </div>
+            </div>
+
+
+            {!showWithdrawForm ? (
+                <div className="relative z-10 space-y-2 mt-4">
+                    {/* <p className="text-sm text-green-200  uppercase tracking-wide">Bot Balance Withdrawal</p> */}
+                    <Button
+                        onClick={() => setShowWithdrawForm(true)}
+                        disabled={!userBotData.subscribed || userBotData.balance <= 0}
+                        className="w-full py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-cyan-700 text-white border-0 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 font-semibold"
+                    >
+                        <ArrowDownToLine className="h-4 w-4 mr-2" />
+                        Withdraw from Bot Balance
+                    </Button>
+                </div>
+            ) : (
+                <div className="relative z-10">
+
+
+                    <div className="space-y-4">
+                        <div className="relative">
+                            <Input
+                                placeholder="Enter amount to withdraw"
+                                value={withdrawAmount}
+                                onChange={(e) => setWithdrawAmount(e.target.value)}
+                                className="w-full bg-slate-800/60 border-emerald-500/30 text-white placeholder:text-slate-400/70 text-sm pl-10 py-3 focus:border-emerald-400 transition-colors"
+                                type="number"
+                                max={userBotData.balance}
+                            />
+                            <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-emerald-400" />
+                        </div>
+
+                        <div className="flex gap-3">
+                            <Button
+                                onClick={handleWithdraw}
+                                disabled={loading || !isConnected || !withdrawAmount || isWithdrawing || !userBotData.subscribed}
+                                className="flex-1 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white transition-all duration-300 hover:scale-[1.02] py-3 font-semibold"
+                            >
+                                {loading || isWithdrawing ? (
+                                    <Loader className="h-4 w-4 animate-spin mr-2" />
+                                ) : (
+                                    <ArrowDownToLine className="h-4 w-4 mr-2" />
+                                )}
+                                Withdraw
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setShowWithdrawForm(false)
+                                    setWithdrawAmount("")
+                                }}
+                                className="bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 hover:text-white transition-all duration-200"
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    )
+}
