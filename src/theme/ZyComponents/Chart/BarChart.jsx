@@ -48,7 +48,7 @@ const TinyBarChart = () => {
           }}
         />
         <Bar dataKey="seenProduct" fill="#d1d5db" radius={40} />
-        <Bar dataKey="sales" fill="#2563eb" radius={40} />
+        <Bar dataKey="sales" fill="#4453f4" radius={40} />
       </BarChart>
     </ResponsiveContainer>
   );

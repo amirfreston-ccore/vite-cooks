@@ -5,8 +5,8 @@
 @font-face {
   font-family: 'FrancaFont';
   src: url('/fonts/font.woff2') format('woff2'),
-       url('/fonts/font.woff') format('woff'),
-       url('/fonts/font.ttf') format('truetype');
+    url('/fonts/font.woff') format('woff'),
+    url('/fonts/font.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,6 +14,7 @@
 body {
   font-family: 'FrancaFont', sans-serif;
 }
+
 
 
 
@@ -25,7 +26,7 @@ body {
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
+    --primary: 235 89% 61%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -45,6 +46,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -52,7 +54,7 @@ body {
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
+    --primary: 235 89% 61%;
     --primary-foreground: 0 0% 9%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
@@ -79,6 +81,7 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }

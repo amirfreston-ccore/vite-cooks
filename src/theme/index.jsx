@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import NavDrawer from './nav.jsx';
 import Header from './header.jsx';
 import { Home, Calculator, BarChart3, Download, Settings, HelpCircle, Users, FileText, Zap } from 'lucide-react';
-import BarChart from './components/Chart/BarChart.jsx'
-import RadialBarChart from './components/Chart/RadialBarChart.jsx'
-import ScatterChart from './components/Chart/ScatterChart.jsx'
-import Select from './components/Select.jsx'
+import BarChart from './ZyComponents/Chart/BarChart.jsx'
+import RadialBarChart from './ZyComponents/Chart/RadialBarChart'
+import ScatterChart from './ZyComponents/Chart/ScatterChart.jsx'
+import Select from './ZyComponents/Select.jsx'
 
-import ZyCard from './components/ZyCard.jsx'
+import ZyCard from './ZyComponents/ZyCard.jsx'
+import ZyComponents from './ZyComponents'
 
 const GlobalTheme = ({ children }) => {
     const [showBg, setShowBg] = useState(true);
@@ -41,7 +42,7 @@ const GlobalTheme = ({ children }) => {
                         {children}
                     </div> */}
 
-                    <div className='flex mt-6 gap-6'>
+                    {true ? <ZyComponents/> : <div className='flex mt-6 gap-6'>
 
                         <div className='w-[60%] flex-[0.6] flex flex-col gap-6'>
                             <div className='grid grid-cols-2 gap-6'>
@@ -144,7 +145,7 @@ const GlobalTheme = ({ children }) => {
 
 
                         </div>
-                    </div>
+                    </div>}
 
 
                 </div>

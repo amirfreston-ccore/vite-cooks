@@ -20,6 +20,7 @@ import { numpySimulator } from './utils/numpySimulator.js';
 
 import Bot from './bot';
 import Theme from './theme';
+import Components from './theme/ZyComponents';
 
 
 const nodeTypes = {
@@ -376,6 +377,7 @@ function App() {
       {/* <FlowApp /> */}
       {/* <Bot/> */}
       <Theme/>
+      {/* <Components/> */}
     </ReactFlowProvider>
   );
 }
