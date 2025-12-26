@@ -255,7 +255,7 @@ export default function App() {
                 ON
               </span>
 
-              <div className={`absolute top-1 left-1 w-10 h-10 bg-white rounded-full shadow-lg transition-all duration-300 flex items-center justify-center ${botActive ? 'translate-x-12' : 'translate-x-0'
+              <div className={`absolute top-1 left-1 w-10 h-10 bg-white/80 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center ${botActive ? 'translate-x-12' : 'translate-x-0'
                 }`}>
                 <Power className={`w-5 h-5 ${botActive ? 'text-green-600' : 'text-gray-400'}`} />
               </div>

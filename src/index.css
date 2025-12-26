@@ -15,8 +15,15 @@ body {
   font-family: 'FrancaFont', sans-serif;
 }
 
+/* .app-bg {
+  background: #ffffff;
+  background: linear-gradient(143deg, rgba(255, 255, 255, 1) 0%, rgba(224, 232, 255, 1) 30%, rgba(216, 238, 242, 1) 69%, rgba(199, 207, 237, 1) 100%);
+} */
 
-
+.app-bg {
+  background: #ECF4F6;
+  background: linear-gradient(143deg, rgba(236, 244, 246, 1) 0%, rgba(224, 232, 245, 1) 30%, rgba(215, 230, 233, 1) 69%, rgba(195, 202, 230, 1) 100%);
+}
 
 @layer base {
   :root {

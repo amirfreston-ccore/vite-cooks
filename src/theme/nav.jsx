@@ -2,7 +2,7 @@ import React from 'react';
 import { Home, Calculator, BarChart3, Download, Settings, HelpCircle, Users, FileText, Zap } from 'lucide-react';
 
 const mockNavData = {
-  logo: "NumPy Flow",
+  logo: "VITE",
   sections: [
     {
       title: "Navigation",
@@ -38,7 +38,7 @@ const iconMap = {
 
 const NavDrawer = () => {
     return (
-        <div className="h-full min-h-screen w-64 bg-white backdrop-blur-[2px] rounded-3xl text-gray-800">
+        <div className="h-full min-h-screen w-64 bg-white/80 backdrop-blur-[2px] rounded-3xl text-gray-800">
             {/* Header */}
             <div className="flex items-center justify-center p-4 ">
                 <h2 className="text-lg font-bold">{mockNavData.logo}</h2>

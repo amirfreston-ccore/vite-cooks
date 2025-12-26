@@ -13,13 +13,13 @@ const Header = () => {
       {/* Right Section - Actions */}
       <div className="flex items-center space-x-3 p-2">
         {/* Notifications */}
-        <button className="bg-white  rounded-full relative p-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors">
+        <button className="bg-white/80  rounded-full relative p-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors">
           <Bell size={20} />
           <span className="absolute top-3 right-3 size-2 bg-red-500 rounded-full"></span>
         </button>
 
         {/* Settings */}
-        <button className="bg-white  rounded-full p-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100  transition-colors">
+        <button className="bg-white/80  rounded-full p-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100  transition-colors">
           <Settings size={20} />
         </button>
 
